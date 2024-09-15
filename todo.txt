@@ -1,0 +1,3 @@
+- Logging
+- Tests
+- validators as passed constructor params?
