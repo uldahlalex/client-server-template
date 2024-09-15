@@ -1,3 +1,4 @@
 - Logging
 - Tests
 - validators as passed constructor params?
+- maybe ci/CD examples
