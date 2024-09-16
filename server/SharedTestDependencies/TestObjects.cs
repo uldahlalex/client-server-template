@@ -3,7 +3,7 @@ using DataAccess.Models;
 
 namespace SharedTestDependencies;
 
-public class Constants
+public class TestObjects
 {
     
     public static Patient GetPatient()

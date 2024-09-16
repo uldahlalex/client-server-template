@@ -16,8 +16,8 @@ public class GetTotalNumberOfDoctorsTests
     {
         //Arrange
 
-        var doctor = Constants.GetDoctor();
-        var doctor2 = Constants.GetDoctor();
+        var doctor = TestObjects.GetDoctor();
+        var doctor2 = TestObjects.GetDoctor();
         
         _setup.DbContextInstance.AddRange(doctor, doctor2);
         _setup.DbContextInstance.SaveChanges();

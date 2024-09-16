@@ -15,12 +15,12 @@ public class GetDoctorWhoMadeMostDiagnosesTests
     public void GetDoctorWhoMadeMostDiagnoses_ShouldFindDoctorWithMostDiagnoses()
     {
         //Arrange
-        var doctor1 = Constants.GetDoctor();
-        var doctor2 = Constants.GetDoctor();
-        var disease = Constants.GetDisease();
-        var diagnosis1 = Constants.GetDiagnosis(doctor1, Constants.GetPatient(), disease);
-        var diagnosis2 = Constants.GetDiagnosis(doctor1, Constants.GetPatient(), disease);
-        var diagnosis3 = Constants.GetDiagnosis(doctor2, Constants.GetPatient(), disease);
+        var doctor1 = TestObjects.GetDoctor();
+        var doctor2 = TestObjects.GetDoctor();
+        var disease = TestObjects.GetDisease();
+        var diagnosis1 = TestObjects.GetDiagnosis(doctor1, TestObjects.GetPatient(), disease);
+        var diagnosis2 = TestObjects.GetDiagnosis(doctor1, TestObjects.GetPatient(), disease);
+        var diagnosis3 = TestObjects.GetDiagnosis(doctor2, TestObjects.GetPatient(), disease);
         _setup.DbContextInstance.AddRange(doctor1, doctor2, disease, diagnosis1, diagnosis2, diagnosis3);
         _setup.DbContextInstance.SaveChanges();
         

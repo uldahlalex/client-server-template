@@ -22,10 +22,10 @@ public class GetAllDoctorsWithDiagnosesMadeTests
     public void GetAllDoctorsWithDiagnosesMade_ReturnsAllDoctorsWithDiagnoses()
     {
         // Arrange
-        var doctor = Constants.GetDoctor();
-        var patient = Constants.GetPatient();
-        var disease = Constants.GetDisease();
-        var diagnosis = Constants.GetDiagnosis(doctor, patient, disease);
+        var doctor = TestObjects.GetDoctor();
+        var patient = TestObjects.GetPatient();
+        var disease = TestObjects.GetDisease();
+        var diagnosis = TestObjects.GetDiagnosis(doctor, patient, disease);
         _db.AddRange(doctor,patient,disease,diagnosis);
         _db.SaveChanges();
             

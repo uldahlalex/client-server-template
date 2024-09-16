@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceTests", "server\Serv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedTestDependencies", "server\SharedTestDependencies\SharedTestDependencies.csproj", "{DDC635AD-1D64-4C62-BDA4-5871E3FB51D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiInterationTests", "server\ApiInterationTests\ApiInterationTests.csproj", "{392E6137-1F41-4073-957B-3FEB267D095F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiIntegrationTests", "server\ApiIntegrationTests\ApiIntegrationTests.csproj", "{392E6137-1F41-4073-957B-3FEB267D095F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

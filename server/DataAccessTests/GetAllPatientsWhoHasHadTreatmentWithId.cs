@@ -17,10 +17,10 @@ public class GetAllPatientsWhoHasHadTreatmentWithId
     public void GetAllPatientsWhoHasTreatmentWithId_Correctly_Returns_List()
     {
         //Arrange
-        var patient = Constants.GetPatient();
-        var patient2 = Constants.GetPatient();
-        var treatment = Constants.GetTreatment();
-        var patientTreatment = Constants.GetPatientTreatment(patient, treatment);
+        var patient = TestObjects.GetPatient();
+        var patient2 = TestObjects.GetPatient();
+        var treatment = TestObjects.GetTreatment();
+        var patientTreatment = TestObjects.GetPatientTreatment(patient, treatment);
         _setup.DbContextInstance.AddRange(patient, patient2, treatment, patientTreatment);
         _setup.DbContextInstance.SaveChanges();
         

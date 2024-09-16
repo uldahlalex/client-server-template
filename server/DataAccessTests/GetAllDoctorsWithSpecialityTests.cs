@@ -15,8 +15,8 @@ public class GetAllDoctorsWithSpecialityTests
     public void GetAllDoctorsWithSpeciality_Returns_Doctors_WithSpeciality()
     {
         //Arrange
-        var doctor1 = Constants.GetDoctor();
-        var doctor2 = Constants.GetDoctor();
+        var doctor1 = TestObjects.GetDoctor();
+        var doctor2 = TestObjects.GetDoctor();
         
         doctor1.Specialty = "Cardiologist";
         doctor2.Specialty = "Urologist";

@@ -16,8 +16,8 @@ public class GetAllDoctorsTest
     {
         var doctors = new List<Doctor>
         {
-            Constants.GetDoctor(), //This is a method that returns a doctor object
-            Constants.GetDoctor() //This is a method that returns a doctor object
+            TestObjects.GetDoctor(), //This is a method that returns a doctor object
+            TestObjects.GetDoctor() //This is a method that returns a doctor object
         };
         _setup.DbContextInstance.Doctors.AddRange(doctors);
         _setup.DbContextInstance.SaveChanges();
@@ -42,8 +42,8 @@ public class GetAllDoctorsTestWithServiceCollection(ITestOutputHelper outputHelp
         outputHelper.WriteLine("hello world");
         var doctors = new List<Doctor>
         {
-            Constants.GetDoctor(), //This is a method that returns a doctor object
-            Constants.GetDoctor() //This is a method that returns a doctor object
+            TestObjects.GetDoctor(), //This is a method that returns a doctor object
+            TestObjects.GetDoctor() //This is a method that returns a doctor object
         };
         _setup.DbContextInstance.Doctors.AddRange(doctors);
         _setup.DbContextInstance.SaveChanges();

@@ -15,9 +15,9 @@ public class ListDoctorsByYearsExperienceTests
     public void ListDoctorsByYearsExperience_Finds_Correct_Order()
     {
         //Arrange
-        var doctor1 = Constants.GetDoctor();
-        var doctor2 = Constants.GetDoctor();
-        var doctor3 = Constants.GetDoctor();
+        var doctor1 = TestObjects.GetDoctor();
+        var doctor2 = TestObjects.GetDoctor();
+        var doctor3 = TestObjects.GetDoctor();
         doctor1.YearsExperience = 3;
         doctor2.YearsExperience = 123;
         doctor3.YearsExperience = 0;

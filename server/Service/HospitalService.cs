@@ -13,6 +13,7 @@ public interface IHospitalService
 {
     public PatientDto CreatePatient(CreatePatientDto createPatientDto);
     public PatientDto UpdatePatient(UpdatePatientDto updatePatientDto);
+    public List<Patient> GetAllPatients(int limit, int startAt);
 }
 public class HospitalService(
     ILogger<HospitalService> logger, 
@@ -47,5 +48,10 @@ public class HospitalService(
         var patient = updatePatientDto.ToPatient();
         context.Patients.Update(patient);
         return new PatientDto().FromEntity(patient);
+    }
+
+    public List<Patient> GetAllPatients(int limit, int startAt)
+    {
+        return context.Patients.OrderBy(p => p.Id).Skip(startAt).Take(limit).ToList();
     }
 }

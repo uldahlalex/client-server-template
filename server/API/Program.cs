@@ -1,4 +1,5 @@
 using System.Text.Json;
+using API.Middleware;
 using DataAccess;
 using DataAccess.Interfaces;
 using FluentValidation.AspNetCore;
@@ -26,28 +27,38 @@ public class Program
             options.UseNpgsql(appOptions.DbConnectionString);
             options.EnableSensitiveDataLogging();
         });
+        builder.Services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreatePatientValidator>());
         builder.Services.AddScoped<IHospitalRepository, HospitalRepository>();
         builder.Services.AddScoped<IHospitalService, HospitalService>();
         builder.Services.AddControllers();
         builder.Services.AddOpenApiDocument();
 
         var app = builder.Build();
-        
+
         var options = app.Services.GetRequiredService<IOptions<AppOptions>>().Value;
         Console.WriteLine("APP OPTIONS: " + JsonSerializer.Serialize(options));
+
         app.UseHttpsRedirection();
+
         app.UseRouting();
+
+
+        app.UseOpenApi();
+        app.UseSwaggerUi();
         app.UseStatusCodePages();
+
         app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+        app.UseMiddleware<RequestResponseLoggingMiddleware>();
+
         app.UseEndpoints(endpoints => endpoints.MapControllers());
+
         using (var scope = app.Services.CreateScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<HospitalContext>();
             context.Database.EnsureCreated();
         }
 
-        app.UseOpenApi();
-        app.UseSwaggerUi();
+        app.Run();
     }
     
 }
