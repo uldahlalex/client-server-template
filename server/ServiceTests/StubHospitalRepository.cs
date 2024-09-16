@@ -4,7 +4,7 @@ using DataAccess.Models;
 
 namespace ServiceTests;
 
-public class StubRepository : IRepository
+public class StubHospitalRepository : IHospitalRepository
 {
     public List<Doctor> GetAllDoctors()
     {

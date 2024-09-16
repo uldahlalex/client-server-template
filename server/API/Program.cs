@@ -26,14 +26,9 @@ public class Program
             options.UseNpgsql(appOptions.DbConnectionString);
             options.EnableSensitiveDataLogging();
         });
-        builder.Services.AddScoped<IRepository, HospitalRepository>();
+        builder.Services.AddScoped<IHospitalRepository, HospitalRepository>();
         builder.Services.AddScoped<IHospitalService, HospitalService>();
-        builder.Services.AddControllers()
-            .AddFluentValidation(fv =>
-            {
-                fv.RegisterValidatorsFromAssemblyContaining<HospitalService>();
-                fv.AutomaticValidationEnabled = false;
-            });
+        builder.Services.AddControllers();
         builder.Services.AddOpenApiDocument();
 
         var app = builder.Build();

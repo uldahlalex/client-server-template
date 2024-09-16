@@ -14,7 +14,7 @@ public class GetAllDoctorsWithDiagnosesMadeTests
 
     public GetAllDoctorsWithDiagnosesMadeTests()
     {
-        _setup = TestSetupHelper.CreateTestSetup();
+        _setup = new PgCtxSetup<HospitalContext>();
         _db = _setup.DbContextInstance;
     }
     
@@ -32,7 +32,7 @@ public class GetAllDoctorsWithDiagnosesMadeTests
         
         
         // A
-        var result =_setup.ServiceProviderInstance.GetRequiredService<IRepository>().GetAllDoctorsIncludingDiagnoses();
+        var result =_setup.ServiceProviderInstance.GetRequiredService<IHospitalRepository>().GetAllDoctorsIncludingDiagnoses();
         
         // Assert
         var expectedDate = diagnosis.DiagnosisDate;

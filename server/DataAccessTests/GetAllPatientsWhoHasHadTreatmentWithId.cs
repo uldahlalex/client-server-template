@@ -9,7 +9,8 @@ namespace xunittests.Repository_Tests;
 public class GetAllPatientsWhoHasHadTreatmentWithId
 {
     
-    private readonly PgCtxSetup<HospitalContext> _setup = TestSetupHelper.CreateTestSetup();
+    private readonly PgCtxSetup<HospitalContext>         _setup = new PgCtxSetup<HospitalContext>();
+
 
 
     [Fact]
@@ -24,7 +25,7 @@ public class GetAllPatientsWhoHasHadTreatmentWithId
         _setup.DbContextInstance.SaveChanges();
         
         //Act
-        var result = _setup.ServiceProviderInstance.GetRequiredService<IRepository>().GetAllPatientsWhoHasHadTreatmentWithId(treatment.Id);
+        var result = _setup.ServiceProviderInstance.GetRequiredService<IHospitalRepository>().GetAllPatientsWhoHasHadTreatmentWithId(treatment.Id);
         
         //Assert
         Assert.Equivalent(result.First(), patient);

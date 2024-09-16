@@ -2,7 +2,7 @@ using DataAccess.Models;
 
 namespace DataAccess.Interfaces;
 
-public interface IRepository
+public interface IHospitalRepository
 {
   
     public List<Doctor> GetAllDoctors();

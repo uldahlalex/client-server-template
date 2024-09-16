@@ -8,7 +8,8 @@ namespace xunittests.Repository_Tests;
 
 public class GetTotalNumberOfDoctorsTests
 {
-    private PgCtxSetup<HospitalContext> _setup = TestSetupHelper.CreateTestSetup();
+    private PgCtxSetup<HospitalContext>        _setup = new PgCtxSetup<HospitalContext>();
+
 
     [Fact]
     public void GetTotalNumberOfDoctors_Correctly_Finds_Total_Number_Of_Doctors()
@@ -22,7 +23,7 @@ public class GetTotalNumberOfDoctorsTests
         _setup.DbContextInstance.SaveChanges();
         
         //Act
-        var result = _setup.ServiceProviderInstance.GetRequiredService<IRepository>().GetTotalNumberOfDoctors();
+        var result = _setup.ServiceProviderInstance.GetRequiredService<IHospitalRepository>().GetTotalNumberOfDoctors();
         
         //Assert
         Assert.Equal(2, result);

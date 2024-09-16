@@ -8,7 +8,8 @@ namespace xunittests.Repository_Tests;
 
 public class ListDoctorsByYearsExperienceTests
 {
-    private PgCtxSetup<HospitalContext> _setup = TestSetupHelper.CreateTestSetup();
+    private PgCtxSetup<HospitalContext>         _setup = new PgCtxSetup<HospitalContext>();
+
 
     [Fact]
     public void ListDoctorsByYearsExperience_Finds_Correct_Order()
@@ -24,7 +25,7 @@ public class ListDoctorsByYearsExperienceTests
         _setup.DbContextInstance.SaveChanges();
         
         //Act
-        var result = _setup.ServiceProviderInstance.GetRequiredService<IRepository>().ListDoctorsByYearsExperience();
+        var result = _setup.ServiceProviderInstance.GetRequiredService<IHospitalRepository>().ListDoctorsByYearsExperience();
         
         //Assert
         var expected = new List<int>() { doctor3.Id, doctor1.Id, doctor2.Id };

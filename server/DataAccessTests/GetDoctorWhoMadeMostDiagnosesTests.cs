@@ -8,7 +8,8 @@ namespace xunittests.Repository_Tests;
 
 public class GetDoctorWhoMadeMostDiagnosesTests
 {
-    private readonly PgCtxSetup<HospitalContext> _setup = TestSetupHelper.CreateTestSetup();
+    private readonly PgCtxSetup<HospitalContext>        _setup = new PgCtxSetup<HospitalContext>();
+
 
     [Fact]
     public void GetDoctorWhoMadeMostDiagnoses_ShouldFindDoctorWithMostDiagnoses()
@@ -24,7 +25,7 @@ public class GetDoctorWhoMadeMostDiagnosesTests
         _setup.DbContextInstance.SaveChanges();
         
         //Act
-        var result = _setup.ServiceProviderInstance.GetRequiredService<IRepository>().GetDoctorWhoMadeMostDiagnoses();
+        var result = _setup.ServiceProviderInstance.GetRequiredService<IHospitalRepository>().GetDoctorWhoMadeMostDiagnoses();
         
         //Assert
         Assert.Equal(doctor1.Id, result.Id);

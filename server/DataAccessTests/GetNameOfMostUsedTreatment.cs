@@ -8,7 +8,8 @@ namespace xunittests.Repository_Tests;
 
 public class GetNameOfMostUsedTreatment
 {
-    private PgCtxSetup<HospitalContext> _setup = TestSetupHelper.CreateTestSetup();
+    private PgCtxSetup<HospitalContext>         _setup = new PgCtxSetup<HospitalContext>();
+
 
     [Fact]
     public void GetNameOfMostUsedTreatment_Correctly_FindsName()
@@ -27,7 +28,7 @@ public class GetNameOfMostUsedTreatment
         _setup.DbContextInstance.SaveChanges();
         
         //Act
-        var result =_setup.ServiceProviderInstance.GetRequiredService<IRepository>().GetNameOfMostUsedTreatment();
+        var result =_setup.ServiceProviderInstance.GetRequiredService<IHospitalRepository>().GetNameOfMostUsedTreatment();
         
         //Assert
         Assert.Equal(result, treatment.Name);

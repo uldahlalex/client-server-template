@@ -8,7 +8,8 @@ namespace xunittests.Repository_Tests;
 
 public class GetAllDoctorsWithSpecialityTests
 {
-    public PgCtxSetup<HospitalContext> _setup = TestSetupHelper.CreateTestSetup();
+    public PgCtxSetup<HospitalContext> _setup  = new PgCtxSetup<HospitalContext>();
+
 
     [Fact]
     public void GetAllDoctorsWithSpeciality_Returns_Doctors_WithSpeciality()
@@ -24,7 +25,7 @@ public class GetAllDoctorsWithSpecialityTests
         _setup.DbContextInstance.SaveChanges();
         
         //Act
-        var result = _setup.ServiceProviderInstance.GetRequiredService<IRepository>().GetAllDoctorsWithSpecialty("Cardiologist");
+        var result = _setup.ServiceProviderInstance.GetRequiredService<IHospitalRepository>().GetAllDoctorsWithSpecialty("Cardiologist");
         
         //Assert
         Assert.Equivalent(result.First(), doctor1);

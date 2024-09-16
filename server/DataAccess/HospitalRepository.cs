@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DataAccess;
 
-public class HospitalRepository(HospitalContext context) : IRepository
+public class HospitalRepository(HospitalContext context) : IHospitalRepository
 {
     public List<Doctor> GetAllDoctors()
     {
