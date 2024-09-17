@@ -4,19 +4,18 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
-using NSubstitute.Exceptions;
 using Service;
 using Service.TransferModels.Requests;
 using Service.Validators;
 
 namespace ServiceTests.StubbingFramework;
 
-public class HospitalServiceTests
+public class NSubstitutedHospitalServiceTests
 {
-    private readonly HospitalService _hospitalService;
+    private readonly IHospitalService _hospitalService;
     private readonly IHospitalRepository _mockRepo;
 
-    public HospitalServiceTests()
+    public NSubstitutedHospitalServiceTests()
     {
         _mockRepo = Substitute.For<IHospitalRepository>();
         _hospitalService = new HospitalService(NullLogger<HospitalService>.Instance, _mockRepo,
@@ -24,6 +23,9 @@ public class HospitalServiceTests
     }
 
 
+    /// <summary>
+    /// Tests that the valid object does not trigger data validation and that the method returns desired object
+    /// </summary>
     [Fact]
     public void CreatePatient_Should_Successfully_Return_A_Patient()
     {
