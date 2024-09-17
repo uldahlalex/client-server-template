@@ -8,7 +8,7 @@
     "build": "npx tsc && npx vite build",
     "lint": "npx eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "npx vite preview",
-    "scaffold": "npx swagger-typescript-api -p http://localhost:5000/swagger/swagger.json -o ./src/ -n Api.ts --axios",
+    "scaffold": "npx swagger-typescript-api -p http://localhost:5000/swagger/v1/swagger.json -o ./src/ -n Api.ts --axios",
     "deploy": "npx firebase deploy --only hosting"
   },
   "dependencies": {

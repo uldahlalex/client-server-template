@@ -1,6 +1,7 @@
 using DataAccess;
 using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Service;
 using Service.TransferModels.Requests;
 
@@ -8,7 +9,9 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PatientController(IHospitalService service) : ControllerBase
+public class PatientController(IHospitalService service,
+    IOptionsMonitor<AppOptions> options
+    ) : ControllerBase
 {
     
     [HttpPost]

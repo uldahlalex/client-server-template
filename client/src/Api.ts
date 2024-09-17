@@ -9,6 +9,92 @@
  * ---------------------------------------------------------------
  */
 
+export interface Patient {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  /** @format date */
+  birthdate?: string;
+  gender?: boolean;
+  address?: string | null;
+  diagnoses?: Diagnosis[];
+  patientTreatments?: PatientTreatment[];
+}
+
+export interface Diagnosis {
+  /** @format int32 */
+  id?: number;
+  /** @format int32 */
+  patientId?: number;
+  /** @format int32 */
+  diseaseId?: number;
+  /** @format date-time */
+  diagnosisDate?: string | null;
+  /** @format int32 */
+  doctorId?: number;
+  disease?: Disease;
+  doctor?: Doctor;
+  patient?: Patient;
+}
+
+export interface Disease {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  severity?: string;
+  diagnoses?: Diagnosis[];
+}
+
+export interface Doctor {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  specialty?: string;
+  /** @format int32 */
+  yearsExperience?: number | null;
+  diagnoses?: Diagnosis[];
+}
+
+export interface PatientTreatment {
+  /** @format int32 */
+  id?: number;
+  /** @format int32 */
+  patientId?: number;
+  /** @format int32 */
+  treatmentId?: number;
+  /** @format date-time */
+  startDate?: string | null;
+  /** @format date-time */
+  endDate?: string | null;
+  patient?: Patient;
+  treatment?: Treatment;
+}
+
+export interface Treatment {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  /** @format double */
+  cost?: number;
+  patientTreatments?: PatientTreatment[];
+}
+
+export interface CreatePatientDto {
+  name?: string;
+  /** @format date */
+  birthdate?: string;
+  gender?: boolean;
+  address?: string | null;
+}
+
+export interface UpdatePatientDto {
+  name?: string;
+  /** @format date */
+  birthdate?: string;
+  gender?: boolean;
+  address?: string | null;
+}
+
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
 import axios from "axios";
 
@@ -54,7 +140,7 @@ export class HttpClient<SecurityDataType = unknown> {
   private format?: ResponseType;
 
   constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
-    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "" });
+    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "http://localhost:5000" });
     this.secure = secure;
     this.format = format;
     this.securityWorker = securityWorker;
@@ -133,7 +219,7 @@ export class HttpClient<SecurityDataType = unknown> {
       ...requestParams,
       headers: {
         ...(requestParams.headers || {}),
-        ...(type && type !== ContentType.FormData ? { "Content-Type": type } : {}),
+        ...(type ? { "Content-Type": type } : {}),
       },
       params: query,
       responseType: responseFormat,
@@ -144,9 +230,74 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title Sample API
+ * @title My Title
  * @version 1.0.0
- *
- * An empty API definition
+ * @baseUrl http://localhost:5000
  */
-export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {}
+export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+  api = {
+    /**
+     * No description
+     *
+     * @tags Patient
+     * @name PatientCreatePatient
+     * @request POST:/api/Patient
+     */
+    patientCreatePatient: (data: CreatePatientDto, params: RequestParams = {}) =>
+      this.request<Patient, any>({
+        path: `/api/Patient`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Patient
+     * @name PatientUpdatePatient
+     * @request PUT:/api/Patient
+     */
+    patientUpdatePatient: (data: UpdatePatientDto, params: RequestParams = {}) =>
+      this.request<Patient, any>({
+        path: `/api/Patient`,
+        method: "PUT",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Patient
+     * @name PatientGetAllPatients
+     * @request GET:/api/Patient
+     */
+    patientGetAllPatients: (
+      query?: {
+        /**
+         * @format int32
+         * @default 10
+         */
+        limit?: number;
+        /**
+         * @format int32
+         * @default 0
+         */
+        startAt?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<Patient[], any>({
+        path: `/api/Patient`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+  };
+}
