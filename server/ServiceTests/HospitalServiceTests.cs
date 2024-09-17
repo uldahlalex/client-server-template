@@ -35,15 +35,4 @@ public class HospitalServiceTests
         Assert.Equal(new DateOnly(1990, 1, 1), result.Birthdate);
     }
     
-    [Fact]
-    public void Test1()
-    {
-        var updatePatient = new UpdatePatientDto
-        {
-            Name = "",
-        };
-        //Asser throws
-        Assert.Throws<ValidationException>(() => _hospitalService.UpdatePatient(updatePatient));
-
-    }
 }

@@ -5,6 +5,7 @@ namespace Service.TransferModels.Requests;
 public  class UpdatePatientDto
 {
     
+    public int Id { get; set; }
     public string Name { get; set; } = null!;
 
     public DateOnly Birthdate { get; set; }
@@ -17,6 +18,7 @@ public  class UpdatePatientDto
     {
         return new Patient
         {
+            Id = Id,
             Name = Name,
             Birthdate = Birthdate,
             Address = Address,

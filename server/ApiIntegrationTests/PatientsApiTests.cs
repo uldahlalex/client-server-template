@@ -33,14 +33,32 @@ public class PatientsApiTests(ITestOutputHelper outputHelper) : WebApplicationFa
             .GetAsync($"api/{nameof(Patient)}?startAt={startAt}&limit={limit}")
             .Result.Content
             .ReadAsStringAsync();
-
+    
         var patientsList = JsonSerializer.Deserialize<List<Patient>>(patientsResponse, new JsonSerializerOptions()
         {
             PropertyNameCaseInsensitive = true  
         });
-
+    
         var expected = patients.OrderBy(p => p.Id).Skip(startAt).Take(limit).ToList();
         
         Assert.Equivalent(expected.Select(p => p.Id), patientsList.Select(p => p.Id));
     }
+
+    [Fact]
+    public async Task GetAllPatients_Can_Get_All_Patients_And_Status_OK()
+    {
+        var patient = TestObjects.GetPatient();
+        _pgCtxSetup.DbContextInstance.Patients.Add(patient);
+        _pgCtxSetup.DbContextInstance.SaveChanges();
+
+        var response = await CreateClient().GetAsync("/api/Patient").Result.Content.ReadAsStringAsync();
+        var returnedPatient = JsonSerializer.Deserialize<List<Patient>>(response, new JsonSerializerOptions() {PropertyNameCaseInsensitive = true});
+
+        outputHelper.WriteLine(response);
+        outputHelper.WriteLine(JsonSerializer.Serialize(patient));
+        var patientList = new List<Patient>() { patient };
+        Assert.Equal(patientList, returnedPatient);
+        
+    }
+
 }
