@@ -50,7 +50,7 @@ public class HospitalRepository(HospitalContext context) : IHospitalRepository
             .First().Name;
     }
 
-    public Patient CreatePatient(Patient patient)
+    public Patient InsertPatient(Patient patient)
     {
         context.Patients.Add(patient);
         context.SaveChanges();

@@ -15,8 +15,6 @@ public class ManualStubHospitalServiceTests
 
     public ManualStubHospitalServiceTests()
     {
-        var pgCtxSetup = new PgCtxSetup<HospitalContext>();
-        ILogger<HospitalService> logger = LoggerFactory.Create((builder) => builder.AddConsole()).CreateLogger<HospitalService>();
         _hospitalService = new HospitalService(null, new StubHospitalRepository(), new CreatePatientValidator(), new UpdatePatientValidator(), null);
     }
 

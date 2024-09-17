@@ -1,8 +1,11 @@
+using DataAccess;
 using DataAccess.Interfaces;
 using DataAccess.Models;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using NSubstitute;
 using Service;
 using Service.TransferModels.Requests;
@@ -18,13 +21,13 @@ public class NSubstitutedHospitalServiceTests
     public NSubstitutedHospitalServiceTests()
     {
         _mockRepo = Substitute.For<IHospitalRepository>();
-        _hospitalService = new HospitalService(NullLogger<HospitalService>.Instance, _mockRepo,
-            new CreatePatientValidator(), new UpdatePatientValidator(), null);
+
     }
 
 
     /// <summary>
-    /// Tests that the valid object does not trigger data validation and that the method returns desired object
+    /// this method tests that a valid object does not trigger data validation exception
+    /// and that the method returns desired object type
     /// </summary>
     [Fact]
     public void CreatePatient_Should_Successfully_Return_A_Patient()
@@ -45,10 +48,10 @@ public class NSubstitutedHospitalServiceTests
             Birthdate = createPatientDto.Birthdate,
             Gender = createPatientDto.Gender
         };
+        
+        _mockRepo.InsertPatient(Arg.Any<Patient>()).Returns(expectedPatient); //Configuring the mock call
 
-        _mockRepo.CreatePatient(Arg.Any<Patient>()).Returns(expectedPatient);
-
-        var result = _hospitalService.CreatePatient(createPatientDto);
+        var result = _hospitalService.CreatePatient(createPatientDto); //In here the mock call is used
 
         Assert.NotNull(result);
         Assert.Equal(expectedPatient.Id, result.Id);

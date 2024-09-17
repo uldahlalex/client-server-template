@@ -46,7 +46,7 @@ public class StubHospitalRepository : IHospitalRepository
         throw new NotImplementedException();
     }
 
-    public Patient CreatePatient(Patient patient)
+    public Patient InsertPatient(Patient patient)
     {
         patient.Id = 1;
         patient.Diagnoses = new List<Diagnosis>();
