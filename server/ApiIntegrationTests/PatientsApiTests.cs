@@ -22,19 +22,7 @@ public class PatientsApiTests : WebApplicationFactory<Program>
     public PatientsApiTests(ITestOutputHelper outputHelper)
     {
         _outputHelper = outputHelper;
-        // _testSettings = new Dictionary<string, string>
-        // {
-        //     { $"{nameof(AppOptions)}:{nameof(AppOptions.DbConnectionString)}", _pgCtxSetup._postgres.GetConnectionString() }
-        // };
         Environment.SetEnvironmentVariable($"{nameof(AppOptions)}:{nameof(AppOptions.DbConnectionString)}", _pgCtxSetup._postgres.GetConnectionString());
-    }
-
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
-    {
-        // builder.ConfigureAppConfiguration((hostingContext, config) =>
-        // {
-        //     config.AddInMemoryCollection(_testSettings);
-        // });
     }
 
     [Theory]
