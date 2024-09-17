@@ -2,18 +2,41 @@ using System.Text.Json;
 using API;
 using DataAccess;
 using DataAccess.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using PgCtx;
+using Service;
 using SharedTestDependencies;
 using Xunit.Abstractions;
 
 namespace ApiInterationTests;
 
-public class PatientsApiTests(ITestOutputHelper outputHelper) : WebApplicationFactory<Program>
+public class PatientsApiTests : WebApplicationFactory<Program>
 {
     private readonly PgCtxSetup<HospitalContext> _pgCtxSetup = new();
-    
+    private readonly ITestOutputHelper _outputHelper;
+    private readonly Dictionary<string, string> _testSettings;
+
+    public PatientsApiTests(ITestOutputHelper outputHelper)
+    {
+        _outputHelper = outputHelper;
+        // _testSettings = new Dictionary<string, string>
+        // {
+        //     { $"{nameof(AppOptions)}:{nameof(AppOptions.DbConnectionString)}", _pgCtxSetup._postgres.GetConnectionString() }
+        // };
+        Environment.SetEnvironmentVariable($"{nameof(AppOptions)}:{nameof(AppOptions.DbConnectionString)}", _pgCtxSetup._postgres.GetConnectionString());
+    }
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        // builder.ConfigureAppConfiguration((hostingContext, config) =>
+        // {
+        //     config.AddInMemoryCollection(_testSettings);
+        // });
+    }
+
     [Theory]
     [InlineData(5,3)]
     public async Task GetAllPatients_Pagination_Can_Limit_And_Skip(int startAt, int limit)
@@ -53,11 +76,9 @@ public class PatientsApiTests(ITestOutputHelper outputHelper) : WebApplicationFa
 
         var response = await CreateClient().GetAsync("/api/Patient").Result.Content.ReadAsStringAsync();
         var returnedPatient = JsonSerializer.Deserialize<List<Patient>>(response, new JsonSerializerOptions() {PropertyNameCaseInsensitive = true});
-
-        outputHelper.WriteLine(response);
-        outputHelper.WriteLine(JsonSerializer.Serialize(patient));
+        
         var patientList = new List<Patient>() { patient };
-        Assert.Equal(patientList, returnedPatient);
+        Assert.Equivalent(patientList, returnedPatient);
         
     }
 

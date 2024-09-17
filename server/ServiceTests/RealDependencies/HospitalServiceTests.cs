@@ -1,5 +1,6 @@
 using DataAccess;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using PgCtx;
 using Service;
@@ -15,7 +16,8 @@ public class HospitalServiceTests
     public HospitalServiceTests()
     {
         var pgCtxSetup = new PgCtxSetup<HospitalContext>();
-        _hospitalService = new HospitalService(NullLogger<HospitalService>.Instance, new StubHospitalRepository(), new CreatePatientValidator(), new UpdatePatientValidator(), pgCtxSetup.DbContextInstance);
+        ILogger<HospitalService> logger = LoggerFactory.Create((builder) => builder.AddConsole()).CreateLogger<HospitalService>();
+        _hospitalService = new HospitalService(logger, new StubHospitalRepository(), new CreatePatientValidator(), new UpdatePatientValidator(), pgCtxSetup.DbContextInstance);
     }
 
     [Fact]
