@@ -28,5 +28,5 @@ public interface IHospitalRepository
     public List<Patient> GetAllPatientsWhoHasHadTreatmentWithId(int treatmentId);
 
     public string GetNameOfMostUsedTreatment();
-    public Patient CreatePatient(Patient patient);
+    public Patient InsertPatient(Patient patient);
 }

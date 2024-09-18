@@ -1,29 +1,34 @@
+using DataAccess;
 using DataAccess.Interfaces;
 using DataAccess.Models;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Logging.Abstractions;
-using NSubstitute;
-using NSubstitute.Exceptions;
+using Moq;
 using Service;
 using Service.TransferModels.Requests;
 using Service.Validators;
+using Xunit;
 
 namespace ServiceTests.StubbingFramework;
 
-public class HospitalServiceTests
+public class MoqHospitalServiceTests
 {
-    private readonly HospitalService _hospitalService;
-    private readonly IHospitalRepository _mockRepo;
+    private readonly IHospitalService _hospitalService;
+    private readonly Mock<IHospitalRepository> _mockRepo;
 
-    public HospitalServiceTests()
+    public MoqHospitalServiceTests()
     {
-        _mockRepo = Substitute.For<IHospitalRepository>();
-        _hospitalService = new HospitalService(NullLogger<HospitalService>.Instance, _mockRepo,
-            new CreatePatientValidator(), new UpdatePatientValidator(), null);
+        _mockRepo = new Mock<IHospitalRepository>();
+        var mockContext = It.IsAny<HospitalContext>();
+        _hospitalService = new HospitalService(NullLogger<HospitalService>.Instance, _mockRepo.Object,
+            new CreatePatientValidator(), new UpdatePatientValidator(), mockContext);
     }
 
-
+    /// <summary>
+    /// this method tests that a valid object does not trigger data validation exception
+    /// and that the method returns desired object type
+    /// </summary>
     [Fact]
     public void CreatePatient_Should_Successfully_Return_A_Patient()
     {
@@ -44,9 +49,10 @@ public class HospitalServiceTests
             Gender = createPatientDto.Gender
         };
 
-        _mockRepo.CreatePatient(Arg.Any<Patient>()).Returns(expectedPatient);
+        _mockRepo.Setup(repo => repo.InsertPatient(It.IsAny<Patient>()))
+            .Returns(expectedPatient); 
 
-        var result = _hospitalService.CreatePatient(createPatientDto);
+        var result = _hospitalService.CreatePatient(createPatientDto); //In here the mock call is used
 
         Assert.NotNull(result);
         Assert.Equal(expectedPatient.Id, result.Id);
@@ -56,7 +62,6 @@ public class HospitalServiceTests
         Assert.Equal(expectedPatient.Gender, result.Gender);
         
     }
-    
     
     [Fact]
     public void CreatePatient_Should_TriggerDataValidation_For_Too_Short_Name()
@@ -70,5 +75,4 @@ public class HospitalServiceTests
         };
         Assert.ThrowsAny<ValidationException>(() => _hospitalService.CreatePatient(createPatientDto));
     }
-
 }

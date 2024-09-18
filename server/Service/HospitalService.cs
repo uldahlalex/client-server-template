@@ -33,7 +33,7 @@ public class HospitalService(
     {
         createPatientValidator.ValidateAndThrow(createPatientDto);
         var patient = createPatientDto.ToPatient();
-        Patient newPatient = hospitalRepository.CreatePatient(patient);
+        Patient newPatient = hospitalRepository.InsertPatient(patient);
         return new PatientDto().FromEntity(newPatient);
     }
     

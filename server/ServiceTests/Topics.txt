@@ -1,0 +1,17 @@
+Real dependencies
+- Pros / cons for testing
+
+Manual stubbing
+- Why interfaces are important: Relying on an abstraction can provide mock implementation
+    - Interfaces also don't require parameters
+        - Circumvents the problem with parameterless constructors
+
+NSubstitute
+- Can be used for third party libraries: Only circumventable approach is to make wrappers to the third party library
+Static invocations:
+- Substitute.For<T>
+- Arg.Any<T> for passing in params
+Extension Methods:
+- Returns()
+
+NullLogger
