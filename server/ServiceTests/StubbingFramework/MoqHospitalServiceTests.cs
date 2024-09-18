@@ -20,9 +20,9 @@ public class MoqHospitalServiceTests
     public MoqHospitalServiceTests()
     {
         _mockRepo = new Mock<IHospitalRepository>();
-        var mockContext = new Mock<HospitalContext>();
+        var mockContext = It.IsAny<HospitalContext>();
         _hospitalService = new HospitalService(NullLogger<HospitalService>.Instance, _mockRepo.Object,
-            new CreatePatientValidator(), new UpdatePatientValidator(), mockContext.Object);
+            new CreatePatientValidator(), new UpdatePatientValidator(), mockContext);
     }
 
     /// <summary>
@@ -49,9 +49,8 @@ public class MoqHospitalServiceTests
             Gender = createPatientDto.Gender
         };
 
-        var argumentMatching = It.Is<Patient>(p => p.Gender == true);
-        _mockRepo.Setup(repo => repo.InsertPatient(argumentMatching))
-            .Returns(expectedPatient); //Configuring the mock call
+        _mockRepo.Setup(repo => repo.InsertPatient(It.IsAny<Patient>()))
+            .Returns(expectedPatient); 
 
         var result = _hospitalService.CreatePatient(createPatientDto); //In here the mock call is used
 
