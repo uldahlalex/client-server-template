@@ -53,4 +53,9 @@ public class StubHospitalRepository : IHospitalRepository
         patient.PatientTreatments = new List<PatientTreatment>();
         return patient;
     }
+
+    public Doctor GetDoctorById(int doctorId)
+    {
+        throw new NotImplementedException();
+    }
 }

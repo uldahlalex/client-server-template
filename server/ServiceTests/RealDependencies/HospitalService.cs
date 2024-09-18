@@ -1,6 +1,7 @@
 using DataAccess;
 using DataAccess.Interfaces;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Npgsql.Internal;
 using PgCtx;
@@ -21,7 +22,7 @@ public class HospitalServiceTests
           ILogger<HospitalService> logger = LoggerFactory.Create((builder) => builder.AddConsole()).CreateLogger<HospitalService>();
           CreatePatientValidator createPatientValidator = new CreatePatientValidator();
           UpdatePatientValidator updatePatientValidator = new UpdatePatientValidator();
-          _hospitalService = new HospitalService(logger,  repository,createPatientValidator, updatePatientValidator,
+          _hospitalService = new HospitalService(NullLogger<HospitalService>.Instance,  repository,createPatientValidator, updatePatientValidator,
                _pgCtxSetup.DbContextInstance);
 
      }
@@ -29,15 +30,20 @@ public class HospitalServiceTests
      [Fact]
      public void GetAllPatients_Can_Limit()
      {
+         //arrange
          _pgCtxSetup.DbContextInstance.Patients.Add(TestObjects.GetPatient());
          _pgCtxSetup.DbContextInstance.Patients.Add(TestObjects.GetPatient());
          _pgCtxSetup.DbContextInstance.Patients.Add(TestObjects.GetPatient());
          _pgCtxSetup.DbContextInstance.SaveChanges();
          
+         //act
          var act = _hospitalService.GetAllPatients(2, 0);
+         
+         //assert
          var actualLength = act.Count;
          var expectedLength = 2;
          Assert.Equivalent(expectedLength, actualLength);
+         //Assert DB state
      }
      
 }

@@ -29,4 +29,5 @@ public interface IHospitalRepository
 
     public string GetNameOfMostUsedTreatment();
     public Patient InsertPatient(Patient patient);
+    public Doctor GetDoctorById(int doctorId);
 }

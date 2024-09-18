@@ -8,6 +8,7 @@ using Moq;
 using Service;
 using Service.TransferModels.Requests;
 using Service.Validators;
+using SharedTestDependencies;
 using Xunit;
 
 namespace ServiceTests.StubbingFramework;
@@ -52,7 +53,8 @@ public class MoqHospitalServiceTests
         _mockRepo.Setup(repo => repo.InsertPatient(It.IsAny<Patient>()))
             .Returns(expectedPatient); 
 
-        var result = _hospitalService.CreatePatient(createPatientDto); //In here the mock call is used
+        //Act
+        var result = _hospitalService.CreatePatient(createPatientDto);
 
         Assert.NotNull(result);
         Assert.Equal(expectedPatient.Id, result.Id);
@@ -60,6 +62,8 @@ public class MoqHospitalServiceTests
         Assert.Equal(expectedPatient.Address, result.Address);
         Assert.Equal(expectedPatient.Birthdate, result.Birthdate);
         Assert.Equal(expectedPatient.Gender, result.Gender);
+        
+        //Assert whats in DB
         
     }
     
@@ -75,4 +79,5 @@ public class MoqHospitalServiceTests
         };
         Assert.ThrowsAny<ValidationException>(() => _hospitalService.CreatePatient(createPatientDto));
     }
+    
 }

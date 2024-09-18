@@ -56,4 +56,9 @@ public class HospitalRepository(HospitalContext context) : IHospitalRepository
         context.SaveChanges();
         return patient;
     }
+
+    public Doctor GetDoctorById(int doctorId)
+    {
+        return context.Doctors.Find(doctorId) ?? throw new KeyNotFoundException("Doctor not found");
+    }
 }

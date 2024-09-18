@@ -15,7 +15,11 @@ public class ManualStubHospitalServiceTests
 
     public ManualStubHospitalServiceTests()
     {
-        _hospitalService = new HospitalService(null, new StubHospitalRepository(), new CreatePatientValidator(), new UpdatePatientValidator(), null);
+        _hospitalService = new HospitalService(NullLogger<HospitalService>.Instance, 
+            new StubHospitalRepository(),
+            new CreatePatientValidator(), 
+            new UpdatePatientValidator(), 
+            null);
     }
 
     [Fact]
@@ -23,7 +27,7 @@ public class ManualStubHospitalServiceTests
     {
         var createPatientDto = new CreatePatientDto
         {
-            Name = "John Doe",
+            Name = "Jo",
             Address = "1234 Elm Street",
             Birthdate = new DateOnly(1990, 1, 1),
             Gender = true
