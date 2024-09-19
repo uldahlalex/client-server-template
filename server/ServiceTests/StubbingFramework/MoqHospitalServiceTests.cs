@@ -22,7 +22,8 @@ public class MoqHospitalServiceTests
     {
         _mockRepo = new Mock<IHospitalRepository>();
         var mockContext = It.IsAny<HospitalContext>();
-        _hospitalService = new HospitalService(NullLogger<HospitalService>.Instance, _mockRepo.Object,
+        _hospitalService = new HospitalService(NullLogger<HospitalService>.Instance, 
+            _mockRepo.Object,
             new CreatePatientValidator(), new UpdatePatientValidator(), mockContext);
     }
 

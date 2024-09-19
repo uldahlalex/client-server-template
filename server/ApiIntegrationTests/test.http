@@ -1,0 +1,6 @@
+PUT http://localhost:5000/api/Patient/1
+Content-Type: application/json
+
+{
+  "data": "asdnlkasd"
+}

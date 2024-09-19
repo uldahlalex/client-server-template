@@ -2,6 +2,7 @@
 using DataAccess.Interfaces;
 using DataAccess.Models;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Service.TransferModels.Requests;
@@ -14,6 +15,7 @@ public interface IHospitalService
     public PatientDto CreatePatient(CreatePatientDto createPatientDto);
     public PatientDto UpdatePatient(UpdatePatientDto updatePatientDto);
     public List<Patient> GetAllPatients(int limit, int startAt);
+    public Diagnosis CreateDiagnosis(CreateDiagnosisDto dto);
 }
 public class HospitalService(
     ILogger<HospitalService> logger, 
@@ -31,6 +33,7 @@ public class HospitalService(
     /// <returns></returns>
     public PatientDto CreatePatient(CreatePatientDto createPatientDto)
     {
+        logger.LogInformation("");
         createPatientValidator.ValidateAndThrow(createPatientDto);
         var patient = createPatientDto.ToPatient();
         Patient newPatient = hospitalRepository.InsertPatient(patient);
@@ -54,5 +57,12 @@ public class HospitalService(
     {
         return context.Patients.OrderBy(p => p.Id).Skip(startAt).Take(limit).ToList();
     }
-    
+
+    public Diagnosis CreateDiagnosis(CreateDiagnosisDto dto)
+    {
+        var diagnosis = dto.ToDiagnosis();
+         context.Diagnoses.Add(diagnosis);
+         context.SaveChanges();
+         return context.Diagnoses.Include(d => d.Disease).First(d => d.Id == diagnosis.Id) ?? throw new InvalidCastException();
+    }
 }

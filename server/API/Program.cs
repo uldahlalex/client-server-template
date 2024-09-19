@@ -24,7 +24,7 @@ public class Program
         builder.Services.AddDbContext<HospitalContext>((serviceProvider, options) =>
         {
             var appOptions = serviceProvider.GetRequiredService<IOptions<AppOptions>>().Value;
-            options.UseNpgsql(appOptions.DbConnectionString);
+            options.UseNpgsql(Environment.GetEnvironmentVariable("DbConnectionString") ?? appOptions.DbConnectionString);
             options.EnableSensitiveDataLogging();
         });
         builder.Services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreatePatientValidator>());

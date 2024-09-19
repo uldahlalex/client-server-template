@@ -1,11 +1,16 @@
-Real dependencies
-- Pros / cons for testing
+- Groups for project starting monday
 
-Manual stubbing
-- Why interfaces are important: Relying on an abstraction can provide mock implementation
-    - Interfaces also don't require parameters
-        - Circumvents the problem with parameterless constructors
+The testing pyramid and going a step up
 
+The concept of the API test
+- the shortcomings of the .http file
 
+Black box testing vs white box testing
 
-NullLogger
+WebApplicationFactory
+- Making http client and calling endpoints
+    - plain strings as routes (there is also a c# equivalent of swagger-typescript-api)
+
+Json deserialization
+
+Setting the environment variable for the API's database

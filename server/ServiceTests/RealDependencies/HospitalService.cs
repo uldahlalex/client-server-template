@@ -19,7 +19,6 @@ public class HospitalServiceTests
      public HospitalServiceTests()
      {
           IHospitalRepository repository = new HospitalRepository(_pgCtxSetup.DbContextInstance);
-          ILogger<HospitalService> logger = LoggerFactory.Create((builder) => builder.AddConsole()).CreateLogger<HospitalService>();
           CreatePatientValidator createPatientValidator = new CreatePatientValidator();
           UpdatePatientValidator updatePatientValidator = new UpdatePatientValidator();
           _hospitalService = new HospitalService(NullLogger<HospitalService>.Instance,  repository,createPatientValidator, updatePatientValidator,

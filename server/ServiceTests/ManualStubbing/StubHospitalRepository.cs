@@ -18,7 +18,7 @@ public class StubHospitalRepository : IHospitalRepository
 
     public int GetTotalNumberOfDoctors()
     {
-        throw new NotImplementedException();
+        return 1;
     }
 
     public List<Doctor> GetAllDoctorsIncludingDiagnoses()

@@ -27,7 +27,7 @@ public class ManualStubHospitalServiceTests
     {
         var createPatientDto = new CreatePatientDto
         {
-            Name = "Jo",
+            Name = "John Doe",
             Address = "1234 Elm Street",
             Birthdate = new DateOnly(1990, 1, 1),
             Gender = true
