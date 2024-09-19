@@ -14,7 +14,7 @@ public class GetAllDoctorsWithDiagnosesMadeTests
 
     public GetAllDoctorsWithDiagnosesMadeTests()
     {
-        _setup = new PgCtxSetup<HospitalContext>();
+        _setup = new PgCtxSetup<HospitalContext>(configureServices: services => services.AddScoped<IHospitalRepository, HospitalRepository>());
         _db = _setup.DbContextInstance;
     }
     

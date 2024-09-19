@@ -9,7 +9,7 @@ namespace xunittests.Repository_Tests;
 public class GetAllPatientsWhoHasHadTreatmentWithId
 {
     
-    private readonly PgCtxSetup<HospitalContext>         _setup = new PgCtxSetup<HospitalContext>();
+    private readonly PgCtxSetup<HospitalContext>         _setup = new PgCtxSetup<HospitalContext>(configureServices: services => services.AddScoped<IHospitalRepository, HospitalRepository>());
 
 
 

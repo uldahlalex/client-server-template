@@ -8,7 +8,7 @@ namespace xunittests.Repository_Tests;
 
 public class GetAllDoctorsWithSpecialityTests
 {
-    public PgCtxSetup<HospitalContext> _setup  = new PgCtxSetup<HospitalContext>();
+    private readonly PgCtxSetup<HospitalContext>         _setup = new PgCtxSetup<HospitalContext>(configureServices: services => services.AddScoped<IHospitalRepository, HospitalRepository>());
 
 
     [Fact]
