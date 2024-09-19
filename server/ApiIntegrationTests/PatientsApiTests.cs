@@ -24,7 +24,8 @@ public class PatientsApiTests : WebApplicationFactory<Program>
     public PatientsApiTests(ITestOutputHelper outputHelper)
     {
         _outputHelper = outputHelper;
-        Environment.SetEnvironmentVariable("DbConnectionString", _pgCtxSetup._postgres.GetConnectionString());
+        Environment.SetEnvironmentVariable("DbConnectionString", 
+            _pgCtxSetup._postgres.GetConnectionString());
     }
 
     [Theory]
