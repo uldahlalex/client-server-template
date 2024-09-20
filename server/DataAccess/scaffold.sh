@@ -2,7 +2,7 @@
 dotnet ef dbcontext scaffold \
   "Server=localhost;Database=testdb;User Id=testuser;Password=testpass;" \
   Npgsql.EntityFrameworkCore.PostgreSQL \
-  --output-dir ../Core/Models \
+  --output-dir ./Models \
   --context-dir . \
   --context HospitalContext  \
   --no-onconfiguring \
