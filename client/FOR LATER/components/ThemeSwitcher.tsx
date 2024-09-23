@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { ThemeAtom } from "../atoms/ThemeAtom.tsx";
+import { ThemeAtom } from "../../src/atoms/ThemeAtom.tsx";
 import themes from "daisyui/src/theming/themes";
 import { Theme } from "daisyui";
 

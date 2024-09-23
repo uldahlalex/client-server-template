@@ -1,7 +1,7 @@
 import {useAtom} from "jotai";
-import {PatientsAtom} from "./atoms/PatientsAtom.tsx";
+import {PatientsAtom} from "../src/atoms/PatientsAtom.tsx";
 import {useEffect} from "react";
-import {http} from "./http.ts";
+import {http} from "./MOVE/http.ts";
 
 export function useInitializeData() {
     

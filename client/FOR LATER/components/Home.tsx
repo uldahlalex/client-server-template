@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {useAtom} from "jotai";
-import {PatientsAtom} from "../atoms/PatientsAtom.tsx";
+import {PatientsAtom} from "../../src/atoms/PatientsAtom.tsx";
 import {useInitializeData} from "../useInitializeData.ts";
 
 export default function Home() {
