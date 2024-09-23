@@ -12,6 +12,14 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        
+        builder.Services.Configure<AppOptions>(builder.Configuration.GetSection(nameof(AppOptions)));
+        builder.Services.AddOptions<AppOptions>()
+            .Bind(builder.Configuration.GetSection(nameof(AppOptions)))
+            .ValidateDataAnnotations()
+            .Validate(appOptions => !string.IsNullOrEmpty(appOptions.DbConnectionString), 
+                "DbConnectionString must be provided.");
+        
         builder.Services.AddDbContext<DunderContext>((serviceProvider, options) =>
         {
             var appOptions = serviceProvider.GetRequiredService<IOptions<AppOptions>>().Value;
