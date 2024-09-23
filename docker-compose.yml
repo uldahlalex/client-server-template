@@ -4,7 +4,7 @@ services:
     environment:
       - POSTGRES_USER=testuser
       - POSTGRES_PASSWORD=testpass
-      - POSTGRES_DB=testdb
+      - POSTGRES_DB=Dunder_Mifflin
     ports:
       - '5432:5432'
     volumes:

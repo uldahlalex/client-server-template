@@ -30,7 +30,7 @@ public class Program
         });
         builder.Services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreatePatientValidator>());
         builder.Services.AddScoped<IHospitalRepository, HospitalRepository>();
-        builder.Services.AddScoped<IHospitalService, HospitalService>();
+        builder.Services.AddScoped<IHospitalService, Service.Service>();
         builder.Services.AddControllers();
         builder.Services.AddOpenApiDocument();
 
