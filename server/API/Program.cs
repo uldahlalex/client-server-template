@@ -1,9 +1,11 @@
 using System.Text.Json;
 using DataAccess;
+using DataAccess.Interfaces;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Service;
+using Service.Interfaces;
 
 namespace API;
 
@@ -27,8 +29,8 @@ public class Program
                               ?? appOptions.DbConnectionString);
             options.EnableSensitiveDataLogging();
         });
-        //builder.Services.AddScoped<IHospitalRepository, HospitalRepository>();
-        //builder.Services.AddScoped<IHospitalService, Service.Service>();
+        builder.Services.AddScoped<IPaperRepository, PaperRepository>();
+        builder.Services.AddScoped<IPaperService, PaperService>();
         builder.Services.AddControllers();
         builder.Services.AddOpenApiDocument();
 
@@ -37,14 +39,13 @@ public class Program
 
         app.UseRouting();
 
-
         app.UseOpenApi();
         app.UseSwaggerUi();
         app.UseStatusCodePages();
 
         app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
-        app.UseEndpoints(endpoints => endpoints.MapControllers());
+        app.MapControllers();
 
         using (var scope = app.Services.CreateScope())
         {

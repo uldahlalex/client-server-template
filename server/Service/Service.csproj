@@ -14,8 +14,6 @@
 
     <ItemGroup>
       <Folder Include="TransferModels\" />
-      <Folder Include="TransferModels\Requests\" />
-      <Folder Include="TransferModels\Responses\" />
       <Folder Include="Validators\" />
     </ItemGroup>
 
