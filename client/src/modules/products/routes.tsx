@@ -1,6 +1,6 @@
 import { RouteObject } from "react-router-dom";
 import { Navigation } from "@app/components/navigation";
-import { HomePage } from "./components/home";
+import { ProductsPage } from "./components/products";
 
 const ROUTES: RouteObject[] = [
 	{
@@ -9,7 +9,7 @@ const ROUTES: RouteObject[] = [
 		children: [
 			{
 				index:true,
-				element:  <HomePage />
+				element:  <ProductsPage />
 			}
 		]
 	}
