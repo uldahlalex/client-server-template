@@ -1,0 +1,5 @@
+- restructure client app
+/hooks
+/atoms, etc
+- GUIDs
+- 
