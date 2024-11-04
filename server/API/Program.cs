@@ -1,9 +1,11 @@
 using System.Text.Json;
+using API.Extensions;
 using DataAccess;
-using DataAccess.Interfaces;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 using PgCtx;
 using Service;
 using Service.Validators;
@@ -16,33 +18,38 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddOptionsWithValidateOnStart<AppOptions>()
-            .Bind(builder.Configuration.GetSection(nameof(AppOptions)))
-            .ValidateDataAnnotations()
-            .Validate(options => new AppOptionsValidator().Validate(options).IsValid,
-                $"{nameof(AppOptions)} validation failed");
+        builder.AdddAppOptions();
 
-        var appOptions = builder.Configuration.GetSection(nameof(AppOptions)).Get<AppOptions>();
-        if (appOptions.RunInTestContainer)
-        {
-            var pg = new PgCtxSetup<HospitalContext>();
-            builder.Configuration[nameof(AppOptions) + ":" + nameof(AppOptions.Database)] =
-                pg._postgres.GetConnectionString();
-        }
+        builder.AddPgContainer();
 
 
         builder.Services.AddDbContext<HospitalContext>((serviceProvider, options) =>
         {
             var appOptions = serviceProvider.GetRequiredService<IOptions<AppOptions>>().Value;
             options.UseNpgsql(appOptions.Database);
-            options.EnableSensitiveDataLogging();
+            options.EnableSensitiveDataLogging();   
         });
         builder.Services.AddFluentValidation(
             fv => fv.RegisterValidatorsFromAssemblyContaining<CreatePatientValidator>());
-        builder.Services.AddScoped<IHospitalRepository, HospitalRepository>();
         builder.Services.AddScoped<IHospitalService, HospitalService>();
         builder.Services.AddControllers();
-        builder.Services.AddOpenApiDocument();
+        builder.Services.AddOpenApiDocument(configuration =>
+        {
+
+            {
+                configuration.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
+                {
+                    Type = OpenApiSecuritySchemeType.ApiKey,
+                    Name = "Authorization",
+                    In = OpenApiSecurityApiKeyLocation.Header,
+                    Description = "Type into the textbox: Bearer {your JWT token}."
+                });
+                //configuration.AddTypeToSwagger<T>(); //If you need to add some type T to the Swagger known types
+                configuration.DocumentProcessors.Add(new MakeAllPropertiesRequiredProcessor());
+
+                configuration.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
+            }
+        });
 
         var app = builder.Build();
 

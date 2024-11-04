@@ -1,6 +1,7 @@
-﻿using DataAccess;
-using DataAccess.Interfaces;
+﻿using System.Text.Json;
+using DataAccess;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Service.TransferModels.Requests;
 using Service.TransferModels.Responses;
@@ -17,7 +18,6 @@ public interface IHospitalService
 
 public class HospitalService(
     ILogger<HospitalService> logger,
-    IHospitalRepository hospitalRepository,
     IValidator<CreatePatientDto> createPatientValidator,
     IValidator<UpdatePatientDto> updatePatientValidator,
     HospitalContext context
@@ -32,8 +32,9 @@ public class HospitalService(
     {
         createPatientValidator.ValidateAndThrow(createPatientDto);
         var patient = createPatientDto.ToPatient();
-        var newPatient = hospitalRepository.InsertPatient(patient);
-        return new PatientResponseDto().FromEntity(newPatient);
+        context.Patients.Add(patient);
+        context.SaveChanges();
+        return new PatientResponseDto().FromEntity(patient);
     }
 
     /// <summary>
@@ -61,8 +62,12 @@ public class HospitalService(
         var diagnosis = dto.ToDiagnosis();
         context.Diagnoses.Add(diagnosis);
         context.SaveChanges();
-        var result = context.Diagnoses.First(d => d.Id == diagnosis.Id) ??
-                     throw new KeyNotFoundException("Could not find");
+        var result = context.Diagnoses
+                         .Include(d => d.Disease)
+                         .Include(d => d.Patient)
+                         .Include(d => d.Doctor)
+                         .First(d => d.Id == diagnosis.Id)
+                     ?? throw new KeyNotFoundException("Could not find");
         return new DiagnosisResponseDto().FromEntity(result);
     }
 }

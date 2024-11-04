@@ -12,13 +12,15 @@ public class DiagnosisResponseDto
 
     public virtual DoctorResponseDto DoctorResponseDto { get; set; } = null!;
 
-    public virtual PatientResponseDto PatientResponseDto { get; set; } = null!;
 
     public DiagnosisResponseDto FromEntity(Diagnosis diagnosis)
     {
         var dto = new DiagnosisResponseDto
         {
-            DiseaseResponseDto = new DiseaseResponseDto()
+            DiseaseResponseDto = new DiseaseResponseDto().FromEntity(diagnosis.Disease),
+            DoctorResponseDto = new DoctorResponseDto().FromEntity(diagnosis.Doctor),
+            Id = diagnosis.Id,
+            DiagnosisDate = diagnosis.DiagnosisDate
         };
         return dto;
     }

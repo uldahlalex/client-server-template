@@ -10,11 +10,12 @@ public class PatientResponseDto
 
     public int Id { get; set; }
 
-    public ICollection<Diagnosis> Diagnoses { get; set; }
+    public ICollection<DiagnosisResponseDto> DiagnosisResponseDtos { get; set; }
 
     public DateOnly Birthdate { get; set; }
 
     public string Name { get; set; }
+    
 
     public PatientResponseDto FromEntity(Patient patient)
     {
@@ -25,7 +26,7 @@ public class PatientResponseDto
             Address = patient.Address,
             Gender = patient.Gender,
             Id = patient.Id,
-            Diagnoses = patient.Diagnoses
+            DiagnosisResponseDtos = patient.Diagnoses.Select(d =>new DiagnosisResponseDto().FromEntity(d)).ToList()
         };
     }
 }

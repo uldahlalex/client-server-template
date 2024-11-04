@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Service;
 using Service.TransferModels.Requests;
+using Service.TransferModels.Responses;
 
 namespace API.Controllers;
 
@@ -15,15 +16,15 @@ public class PatientController(
 {
     [HttpPost]
     [Route("")]
-    public ActionResult<Patient> CreatePatient(CreatePatientDto createPatientDto)
+    public ActionResult<PatientResponseDto> CreatePatient(CreatePatientDto createPatientDto)
     {
-        var patient = service.CreatePatient(createPatientDto);
+        PatientResponseDto patient = service.CreatePatient(createPatientDto);
         return Ok(patient);
     }
 
     [HttpPut]
     [Route("")]
-    public ActionResult<Patient> UpdatePatient(UpdatePatientDto updatePatientDto)
+    public ActionResult<PatientResponseDto> UpdatePatient(UpdatePatientDto updatePatientDto)
     {
         var patient = service.UpdatePatient(updatePatientDto);
         return Ok(patient);
@@ -31,7 +32,7 @@ public class PatientController(
 
     [HttpGet]
     [Route("")]
-    public ActionResult<List<Patient>> GetAllPatients(int limit = 10, int startAt = 0)
+    public ActionResult<List<PatientResponseDto>> GetAllPatients(int limit = 10, int startAt = 0)
     {
         var patients = service.GetAllPatients(limit, startAt);
         return Ok(patients);

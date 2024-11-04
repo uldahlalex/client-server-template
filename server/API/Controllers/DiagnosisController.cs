@@ -2,6 +2,7 @@ using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 using Service.TransferModels.Requests;
+using Service.TransferModels.Responses;
 
 namespace API.Controllers;
 
@@ -10,7 +11,7 @@ namespace API.Controllers;
 public class DiagnosisController(IHospitalService service) : ControllerBase
 {
     [HttpPost]
-    public ActionResult<Diagnosis> CreateDiagnosis([FromBody] CreateDiagnosisDto dto)
+    public ActionResult<DiagnosisResponseDto> CreateDiagnosis([FromBody] CreateDiagnosisDto dto)
     {
         var result = service.CreateDiagnosis(dto);
         return Ok(result);

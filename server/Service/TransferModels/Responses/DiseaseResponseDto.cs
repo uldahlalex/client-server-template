@@ -10,13 +10,11 @@ public class DiseaseResponseDto
 
     public string Severity { get; set; } = null!;
 
-      public virtual ICollection<DiagnosisResponseDto> DiagnosesResponseDtos { get; set; } = new List<DiagnosisResponseDto>();
 
     public DiseaseResponseDto FromEntity(Disease disease)
     {
         var dto = new DiseaseResponseDto
         {
-                     DiagnosesResponseDtos = disease.Diagnoses.Select(diagnosis => new DiagnosisResponseDto().FromEntity(diagnosis)).ToList(),
             Severity = disease.Severity,
             Name = disease.Name,
             Id = disease.Id
