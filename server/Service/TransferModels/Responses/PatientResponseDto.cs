@@ -2,7 +2,7 @@ using DataAccess.Models;
 
 namespace Service.TransferModels.Responses;
 
-public class PatientDto
+public class PatientResponseDto
 {
     public string? Address { get; set; }
 
@@ -16,9 +16,9 @@ public class PatientDto
 
     public string Name { get; set; }
 
-    public PatientDto FromEntity(Patient patient)
+    public PatientResponseDto FromEntity(Patient patient)
     {
-        return new PatientDto
+        return new PatientResponseDto
         {
             Name = patient.Name,
             Birthdate = patient.Birthdate,

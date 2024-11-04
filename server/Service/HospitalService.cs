@@ -1,8 +1,6 @@
 ﻿using DataAccess;
 using DataAccess.Interfaces;
-using DataAccess.Models;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Service.TransferModels.Requests;
 using Service.TransferModels.Responses;
@@ -11,10 +9,10 @@ namespace Service;
 
 public interface IHospitalService
 {
-    public PatientDto CreatePatient(CreatePatientDto createPatientDto);
-    public PatientDto UpdatePatient(UpdatePatientDto updatePatientDto);
-    public List<Patient> GetAllPatients(int limit, int startAt);
-    public Diagnosis CreateDiagnosis(CreateDiagnosisDto dto);
+    public PatientResponseDto CreatePatient(CreatePatientDto createPatientDto);
+    public PatientResponseDto UpdatePatient(UpdatePatientDto updatePatientDto);
+    public List<PatientResponseDto> GetAllPatients(int limit, int startAt);
+    public DiagnosisResponseDto CreateDiagnosis(CreateDiagnosisDto dto);
 }
 
 public class HospitalService(
@@ -30,13 +28,12 @@ public class HospitalService(
     /// </summary>
     /// <param name="createPatientDto"></param>
     /// <returns></returns>
-    public PatientDto CreatePatient(CreatePatientDto createPatientDto)
+    public PatientResponseDto CreatePatient(CreatePatientDto createPatientDto)
     {
-        logger.LogInformation("");
         createPatientValidator.ValidateAndThrow(createPatientDto);
         var patient = createPatientDto.ToPatient();
         var newPatient = hospitalRepository.InsertPatient(patient);
-        return new PatientDto().FromEntity(newPatient);
+        return new PatientResponseDto().FromEntity(newPatient);
     }
 
     /// <summary>
@@ -44,25 +41,28 @@ public class HospitalService(
     /// </summary>
     /// <param name="updatePatientDto"></param>
     /// <returns></returns>
-    public PatientDto UpdatePatient(UpdatePatientDto updatePatientDto)
+    public PatientResponseDto UpdatePatient(UpdatePatientDto updatePatientDto)
     {
         updatePatientValidator.ValidateAndThrow(updatePatientDto);
         var patient = updatePatientDto.ToPatient();
         context.Patients.Update(patient);
-        return new PatientDto().FromEntity(patient);
+        return new PatientResponseDto().FromEntity(patient);
     }
 
-    public List<Patient> GetAllPatients(int limit, int startAt)
+    public List<PatientResponseDto> GetAllPatients(int limit, int startAt)
     {
-        return context.Patients.OrderBy(p => p.Id).Skip(startAt).Take(limit).ToList();
+        var entities = context.Patients.OrderBy(p => p.Id).Skip(startAt).Take(limit).ToList();
+        var dtos = entities.Select(patient => new PatientResponseDto().FromEntity(patient));
+        return dtos.ToList();
     }
 
-    public Diagnosis CreateDiagnosis(CreateDiagnosisDto dto)
+    public DiagnosisResponseDto CreateDiagnosis(CreateDiagnosisDto dto)
     {
         var diagnosis = dto.ToDiagnosis();
         context.Diagnoses.Add(diagnosis);
         context.SaveChanges();
-        return context.Diagnoses.Include(d => d.Disease).First(d => d.Id == diagnosis.Id) ??
-               throw new InvalidCastException();
+        var result = context.Diagnoses.First(d => d.Id == diagnosis.Id) ??
+                     throw new KeyNotFoundException("Could not find");
+        return new DiagnosisResponseDto().FromEntity(result);
     }
 }

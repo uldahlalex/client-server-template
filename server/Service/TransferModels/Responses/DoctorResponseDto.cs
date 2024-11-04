@@ -2,16 +2,16 @@ using DataAccess.Models;
 
 namespace Service.TransferModels.Responses;
 
-public class DoctorDto
+public class DoctorResponseDto
 {
     public int Id { get; set; }
     public string Name { get; set; } = null!;
     public string Specialty { get; set; } = null!;
     public int? YearsExperience { get; set; }
 
-    public DoctorDto FromEntity(Doctor doctor)
+    public DoctorResponseDto FromEntity(Doctor doctor)
     {
-        return new DoctorDto
+        return new DoctorResponseDto
         {
             Id = doctor.Id,
             Name = doctor.Name,

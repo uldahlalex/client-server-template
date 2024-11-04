@@ -18,9 +18,9 @@ public class ApiTestBase : WebApplicationFactory<Program>
         Environment.SetEnvironmentVariable(nameof(AppOptions) + ":" + nameof(AppOptions.Database),
             PgCtxSetup._postgres.GetConnectionString());
         ApplicationServices = base.Services.CreateScope().ServiceProvider;
-        Client = CreateClient();
+        TestHttpClient = CreateClient();
         //If you have enabled authentication, you can attach a default JWT for the http client
-        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(UserJwt);
+        TestHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(UserJwt);
         Seed().GetAwaiter().GetResult();
     }
 
@@ -60,7 +60,7 @@ public class ApiTestBase : WebApplicationFactory<Program>
     #region properties
 
     public PgCtxSetup<HospitalContext> PgCtxSetup;
-    public HttpClient Client { get; set; }
+    public HttpClient TestHttpClient { get; set; }
 
     public string UserJwt { get; set; } =
         "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.0Bk7pFvb2zgnomw3gUNpoCNq9fEhAD-qrzD38eOjo4PN0PZwiZbcssGRuslR0KG9umsY1lB0MFCH54eRSficnQ";
