@@ -3,7 +3,6 @@ using DataAccess.Interfaces;
 using DataAccess.Models;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Service.TransferModels.Requests;
 using Service.TransferModels.Responses;
@@ -17,17 +16,17 @@ public interface IHospitalService
     public List<Patient> GetAllPatients(int limit, int startAt);
     public Diagnosis CreateDiagnosis(CreateDiagnosisDto dto);
 }
+
 public class HospitalService(
-    ILogger<HospitalService> logger, 
-    IHospitalRepository hospitalRepository, 
+    ILogger<HospitalService> logger,
+    IHospitalRepository hospitalRepository,
     IValidator<CreatePatientDto> createPatientValidator,
     IValidator<UpdatePatientDto> updatePatientValidator,
     HospitalContext context
-    ) : IHospitalService
+) : IHospitalService
 {
-
     /// <summary>
-    /// This one relies on the repository to "Create patient"
+    ///     This one relies on the repository to "Create patient"
     /// </summary>
     /// <param name="createPatientDto"></param>
     /// <returns></returns>
@@ -36,12 +35,12 @@ public class HospitalService(
         logger.LogInformation("");
         createPatientValidator.ValidateAndThrow(createPatientDto);
         var patient = createPatientDto.ToPatient();
-        Patient newPatient = hospitalRepository.InsertPatient(patient);
+        var newPatient = hospitalRepository.InsertPatient(patient);
         return new PatientDto().FromEntity(newPatient);
     }
-    
+
     /// <summary>
-    /// This one deliberately does not use the repository, it uses the context directly (for demonstration purposes)
+    ///     This one deliberately does not use the repository, it uses the context directly (for demonstration purposes)
     /// </summary>
     /// <param name="updatePatientDto"></param>
     /// <returns></returns>
@@ -61,8 +60,9 @@ public class HospitalService(
     public Diagnosis CreateDiagnosis(CreateDiagnosisDto dto)
     {
         var diagnosis = dto.ToDiagnosis();
-         context.Diagnoses.Add(diagnosis);
-         context.SaveChanges();
-         return context.Diagnoses.Include(d => d.Disease).First(d => d.Id == diagnosis.Id) ?? throw new InvalidCastException();
+        context.Diagnoses.Add(diagnosis);
+        context.SaveChanges();
+        return context.Diagnoses.Include(d => d.Disease).First(d => d.Id == diagnosis.Id) ??
+               throw new InvalidCastException();
     }
 }

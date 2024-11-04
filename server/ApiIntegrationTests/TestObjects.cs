@@ -1,11 +1,10 @@
 using Bogus;
 using DataAccess.Models;
 
-namespace SharedTestDependencies;
+namespace ApiInterationTests;
 
 public class TestObjects
 {
-    
     public static Patient GetPatient()
     {
         return new Faker<Patient>()
@@ -14,7 +13,7 @@ public class TestObjects
             .RuleFor(p => p.Birthdate, f => f.Date.PastDateOnly())
             .RuleFor(p => p.Gender, f => true);
     }
-    
+
     public static Doctor GetDoctor()
     {
         return new Faker<Doctor>()
@@ -29,7 +28,7 @@ public class TestObjects
             .RuleFor(d => d.Severity, f => f.Lorem.Word())
             .RuleFor(d => d.Name, f => f.Lorem.Word());
     }
-    
+
     public static Diagnosis GetDiagnosis(Doctor doctor, Patient patient, Disease disease)
     {
         return new Faker<Diagnosis>()
@@ -38,7 +37,7 @@ public class TestObjects
             .RuleFor(d => d.Doctor, f => doctor)
             .RuleFor(d => d.Patient, f => patient);
     }
-    
+
     public static Treatment GetTreatment()
     {
         return new Faker<Treatment>()

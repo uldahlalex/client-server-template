@@ -7,15 +7,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
-      <PackageReference Include="FluentValidation" Version="11.9.2" />
+        <ProjectReference Include="..\DataAccess\DataAccess.csproj"/>
+        <PackageReference Include="FluentValidation" Version="11.9.2"/>
 
-   </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="TransferModels\" />
     </ItemGroup>
 
- 
+    <ItemGroup>
+        <Folder Include="TransferModels\"/>
+    </ItemGroup>
+
 
 </Project>

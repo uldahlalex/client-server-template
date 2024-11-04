@@ -10,7 +10,7 @@ public class CreateDiagnosisDto
 
     public Diagnosis ToDiagnosis()
     {
-        return new Diagnosis()
+        return new Diagnosis
         {
             DiseaseId = DiseaseId,
             DoctorId = DoctorId,

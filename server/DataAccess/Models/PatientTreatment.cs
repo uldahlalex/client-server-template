@@ -1,6 +1,6 @@
 ﻿namespace DataAccess.Models;
 
-public partial class PatientTreatment
+public class PatientTreatment
 {
     public int Id { get; set; }
 

@@ -8,7 +8,7 @@ public class DoctorDto
     public string Name { get; set; } = null!;
     public string Specialty { get; set; } = null!;
     public int? YearsExperience { get; set; }
-    
+
     public DoctorDto FromEntity(Doctor doctor)
     {
         return new DoctorDto

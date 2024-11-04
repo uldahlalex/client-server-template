@@ -4,11 +4,10 @@ namespace DataAccess.Interfaces;
 
 public interface IHospitalRepository
 {
-  
     public List<Doctor> GetAllDoctors();
-    
+
     /// <summary>
-    /// Order ascending
+    ///     Order ascending
     /// </summary>
     /// <returns></returns>
     public List<Doctor> ListDoctorsByYearsExperience();
@@ -16,7 +15,7 @@ public interface IHospitalRepository
     public int GetTotalNumberOfDoctors();
 
     /// <summary>
-    /// Diagnoses are a property for a doctor object which must be included here
+    ///     Diagnoses are a property for a doctor object which must be included here
     /// </summary>
     /// <returns></returns>
     public List<Doctor> GetAllDoctorsIncludingDiagnoses();

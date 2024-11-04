@@ -1,10 +1,10 @@
 using System.Text.Json;
-using API.Middleware;
 using DataAccess;
 using DataAccess.Interfaces;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using PgCtx;
 using Service;
 using Service.Validators;
 
@@ -21,14 +21,24 @@ public class Program
             .ValidateDataAnnotations()
             .Validate(options => new AppOptionsValidator().Validate(options).IsValid,
                 $"{nameof(AppOptions)} validation failed");
+
+        var appOptions = builder.Configuration.GetSection(nameof(AppOptions)).Get<AppOptions>();
+        if (appOptions.RunInTestContainer)
+        {
+            var pg = new PgCtxSetup<HospitalContext>();
+            builder.Configuration[nameof(AppOptions) + ":" + nameof(AppOptions.Database)] =
+                pg._postgres.GetConnectionString();
+        }
+
+
         builder.Services.AddDbContext<HospitalContext>((serviceProvider, options) =>
         {
             var appOptions = serviceProvider.GetRequiredService<IOptions<AppOptions>>().Value;
-            options.UseNpgsql(Environment.GetEnvironmentVariable("DbConnectionString") 
-                              ?? appOptions.DbConnectionString);
+            options.UseNpgsql(appOptions.Database);
             options.EnableSensitiveDataLogging();
         });
-        builder.Services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreatePatientValidator>());
+        builder.Services.AddFluentValidation(
+            fv => fv.RegisterValidatorsFromAssemblyContaining<CreatePatientValidator>());
         builder.Services.AddScoped<IHospitalRepository, HospitalRepository>();
         builder.Services.AddScoped<IHospitalService, HospitalService>();
         builder.Services.AddControllers();
@@ -49,7 +59,6 @@ public class Program
         app.UseStatusCodePages();
 
         app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
-        app.UseMiddleware<RequestResponseLoggingMiddleware>();
 
         app.UseEndpoints(endpoints => endpoints.MapControllers());
 
@@ -57,9 +66,10 @@ public class Program
         {
             var context = scope.ServiceProvider.GetRequiredService<HospitalContext>();
             context.Database.EnsureCreated();
+            //Writes current SQL database to a .sql file
+            File.WriteAllText("current_db.sql", context.Database.GenerateCreateScript());
         }
 
         app.Run();
     }
-    
 }

@@ -6,7 +6,6 @@ public class AppOptionsValidator : AbstractValidator<AppOptions>
 {
     public AppOptionsValidator()
     {
-        RuleFor(x => x.DbConnectionString).NotEmpty();
+        RuleFor(x => x.Database).NotEmpty();
     }
-    
 }

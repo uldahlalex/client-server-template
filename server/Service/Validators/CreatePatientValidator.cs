@@ -9,5 +9,4 @@ public class CreatePatientValidator : AbstractValidator<CreatePatientDto>
     {
         RuleFor(p => p.Name.Length).GreaterThan(3);
     }
-    
 }

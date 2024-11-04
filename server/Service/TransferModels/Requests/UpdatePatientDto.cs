@@ -2,16 +2,15 @@ using DataAccess.Models;
 
 namespace Service.TransferModels.Requests;
 
-public  class UpdatePatientDto
+public class UpdatePatientDto
 {
-    
     public int Id { get; set; }
     public string Name { get; set; } = null!;
 
     public DateOnly Birthdate { get; set; }
 
     public bool Gender { get; set; }
-    
+
     public string? Address { get; set; }
 
     public Patient ToPatient()
@@ -25,5 +24,4 @@ public  class UpdatePatientDto
             Gender = Gender
         };
     }
-    
 }
