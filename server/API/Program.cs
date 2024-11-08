@@ -1,13 +1,15 @@
-using System.Text.Json;
 using API.Extensions;
 using DataAccess;
+using DataAccess.Entities;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using NSwag;
 using NSwag.Generation.Processors.Security;
-using PgCtx;
 using Service;
+using Service.Security;
 using Service.Validators;
 
 namespace API;
@@ -21,21 +23,48 @@ public class Program
         builder.AdddAppOptions();
 
         builder.AddPgContainer();
+        var options = builder.Configuration.GetSection(nameof(AppOptions)).Get<AppOptions>()!;
 
 
-        builder.Services.AddDbContext<HospitalContext>((serviceProvider, options) =>
+        builder.Services.AddDbContext<HospitalContext>(config =>
         {
-            var appOptions = serviceProvider.GetRequiredService<IOptions<AppOptions>>().Value;
-            options.UseNpgsql(appOptions.Database);
-            options.EnableSensitiveDataLogging();   
+            config.UseNpgsql(options.DbConnectionString);
+            config.EnableSensitiveDataLogging();
         });
         builder.Services.AddFluentValidation(
             fv => fv.RegisterValidatorsFromAssemblyContaining<CreatePatientValidator>());
         builder.Services.AddScoped<IHospitalService, HospitalService>();
+
+        #region Security
+
+        builder
+            .Services.AddIdentityApiEndpoints<User>()
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<HospitalContext>();
+        builder.Services.AddSingleton<IPasswordHasher<User>, Argon2idPasswordHasher<User>>();
+        builder
+            .Services.AddAuthentication(config =>
+            {
+                config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                config.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                config.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(o => { o.TokenValidationParameters = JwtTokenClaimService.ValidationParameters(options); });
+        builder.Services.AddAuthorization(options =>
+        {
+            options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                // Globally require users to be authenticated
+                .RequireAuthenticatedUser()
+                .Build();
+        });
+        builder.Services.AddScoped<ITokenClaimsService, JwtTokenClaimService>();
+
+        #endregion
+
         builder.Services.AddControllers();
         builder.Services.AddOpenApiDocument(configuration =>
         {
-
             {
                 configuration.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
                 {
@@ -51,14 +80,16 @@ public class Program
             }
         });
 
+
         var app = builder.Build();
 
-        var options = app.Services.GetRequiredService<IOptions<AppOptions>>().Value;
-        Console.WriteLine("APP OPTIONS: " + JsonSerializer.Serialize(options));
-
-        app.UseHttpsRedirection();
+        //app.UseHttpsRedirection();
 
         app.UseRouting();
+        //app.UseAuthentication();
+        //app.UseAuthorization();
+
+        app.MapIdentityApi<IdentityUser>().AllowAnonymous();
 
 
         app.UseOpenApi();
@@ -72,6 +103,7 @@ public class Program
         using (var scope = app.Services.CreateScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<HospitalContext>();
+            context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
             //Writes current SQL database to a .sql file
             File.WriteAllText("current_db.sql", context.Database.GenerateCreateScript());

@@ -15,7 +15,7 @@ public class PatientResponseDto
     public DateOnly Birthdate { get; set; }
 
     public string Name { get; set; }
-    
+
 
     public PatientResponseDto FromEntity(Patient patient)
     {
@@ -26,7 +26,7 @@ public class PatientResponseDto
             Address = patient.Address,
             Gender = patient.Gender,
             Id = patient.Id,
-            DiagnosisResponseDtos = patient.Diagnoses.Select(d =>new DiagnosisResponseDto().FromEntity(d)).ToList()
+            DiagnosisResponseDtos = patient.Diagnoses.Select(d => new DiagnosisResponseDto().FromEntity(d)).ToList()
         };
     }
 }

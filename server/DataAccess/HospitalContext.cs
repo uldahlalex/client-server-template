@@ -1,14 +1,20 @@
-﻿using DataAccess.Models;
+﻿using DataAccess.Entities;
+using DataAccess.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess;
 
-public partial class HospitalContext : DbContext
+public partial class HospitalContext : IdentityDbContext<User>
 {
     public HospitalContext(DbContextOptions<HospitalContext> options)
         : base(options)
     {
     }
+
+    public virtual DbSet<User> Users { get; set; }
+
 
     public virtual DbSet<Diagnosis> Diagnoses { get; set; }
 
@@ -24,6 +30,7 @@ public partial class HospitalContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+     
         modelBuilder.Entity<Diagnosis>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("diagnoses_pkey");
@@ -131,8 +138,7 @@ public partial class HospitalContext : DbContext
             entity.Property(e => e.Name).HasColumnName("name");
         });
 
-        OnModelCreatingPartial(modelBuilder);
+        base.OnModelCreating(modelBuilder);
     }
 
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

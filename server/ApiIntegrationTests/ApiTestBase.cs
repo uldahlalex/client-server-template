@@ -15,7 +15,7 @@ public class ApiTestBase : WebApplicationFactory<Program>
     public ApiTestBase()
     {
         PgCtxSetup = new PgCtxSetup<HospitalContext>();
-        Environment.SetEnvironmentVariable(nameof(AppOptions) + ":" + nameof(AppOptions.Database),
+        Environment.SetEnvironmentVariable(nameof(AppOptions) + ":" + nameof(AppOptions.DbConnectionString),
             PgCtxSetup._postgres.GetConnectionString());
         ApplicationServices = base.Services.CreateScope().ServiceProvider;
         TestHttpClient = CreateClient();

@@ -12,7 +12,7 @@ public static class PgCtxExtensions
         if (appOptions.RunInTestContainer)
         {
             var pg = new PgCtxSetup<HospitalContext>();
-            builder.Configuration[nameof(AppOptions) + ":" + nameof(AppOptions.Database)] =
+            builder.Configuration[nameof(AppOptions) + ":" + nameof(AppOptions.DbConnectionString)] =
                 pg._postgres.GetConnectionString();
         }
 

@@ -1,4 +1,3 @@
-using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Service;
@@ -18,7 +17,7 @@ public class PatientController(
     [Route("")]
     public ActionResult<PatientResponseDto> CreatePatient(CreatePatientDto createPatientDto)
     {
-        PatientResponseDto patient = service.CreatePatient(createPatientDto);
+        var patient = service.CreatePatient(createPatientDto);
         return Ok(patient);
     }
 

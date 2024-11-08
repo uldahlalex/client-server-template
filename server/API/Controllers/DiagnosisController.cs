@@ -1,4 +1,3 @@
-using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 using Service.TransferModels.Requests;

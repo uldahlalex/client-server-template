@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using DataAccess;
+﻿using DataAccess;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
