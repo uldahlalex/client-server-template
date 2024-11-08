@@ -53,6 +53,7 @@ public class AuthController : ControllerBase
         if (!result.Succeeded)
             throw new Exception(
                 JsonSerializer.Serialize(result.Errors.ToDictionary(x => x.Code, x => new[] { x.Description })));
+       
         await userManager.AddToRoleAsync(user, Role.Reader);
         return new RegisterResponse(user.Email, user.UserName);
     }

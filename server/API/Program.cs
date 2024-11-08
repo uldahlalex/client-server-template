@@ -19,6 +19,8 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddSingleton(_ => TimeProvider.System);
+
 
         builder.AdddAppOptions();
 
@@ -54,21 +56,28 @@ public class Program
         builder.Services.AddAuthorization(options =>
         {
             options.FallbackPolicy = new AuthorizationPolicyBuilder()
-                // Globally require users to be authenticated
                 .RequireAuthenticatedUser()
                 .Build();
+            options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                .Build();
+
         });
         builder.Services.AddScoped<ITokenClaimsService, JwtTokenClaimService>();
 
         #endregion
 
         builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer(); // Add this line
+
         builder.Services.AddOpenApiDocument(configuration =>
         {
             {
                 configuration.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
                 {
                     Type = OpenApiSecuritySchemeType.ApiKey,
+                    Scheme = "Bearer ",
                     Name = "Authorization",
                     In = OpenApiSecurityApiKeyLocation.Header,
                     Description = "Type into the textbox: Bearer {your JWT token}."
@@ -83,32 +92,44 @@ public class Program
 
         var app = builder.Build();
 
-        //app.UseHttpsRedirection();
+        app.UseHttpsRedirection();
 
         app.UseRouting();
-        //app.UseAuthentication();
-        //app.UseAuthorization();
+;
 
-        app.MapIdentityApi<IdentityUser>().AllowAnonymous();
+        //app.MapIdentityApi<IdentityUser>().AllowAnonymous();
 
 
         app.UseOpenApi();
         app.UseSwaggerUi();
-        app.UseStatusCodePages();
-
+        app.Use(async (context, next) =>
+        {
+            if (context.Request.Path.StartsWithSegments("/swagger"))
+            {
+                context.Request.Headers["Authorization"] = string.Empty;
+            }
+            await next();
+        });
+        app.UseAuthentication();
+        app.UseAuthorization();
         app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
-        app.UseEndpoints(endpoints => endpoints.MapControllers());
+       
+            app.MapControllers();
+              app.UseStatusCodePages();
 
         using (var scope = app.Services.CreateScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<HospitalContext>();
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
-            //Writes current SQL database to a .sql file
-            File.WriteAllText("current_db.sql", context.Database.GenerateCreateScript());
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            if (!roleManager.RoleExistsAsync(Role.Reader).GetAwaiter().GetResult())
+            {
+                 roleManager.CreateAsync(new IdentityRole(Role.Reader)).GetAwaiter().GetResult();
+            }            File.WriteAllText("current_db.sql", context.Database.GenerateCreateScript());
         }
-
+    
         app.Run();
     }
 }

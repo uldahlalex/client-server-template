@@ -8,6 +8,7 @@ import {ThemeAtom} from "../atoms/ThemeAtom.tsx";
 import Home from "./Home.tsx";
 
 const App = () => {
+    
 
     const [theme, setTheme] = useAtom(ThemeAtom);
 
