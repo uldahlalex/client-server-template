@@ -1,6 +1,7 @@
 using API.Extensions;
 using DataAccess;
 using DataAccess.Entities;
+using DataAccess.Models;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -69,7 +70,7 @@ public class Program
         #endregion
 
         builder.Services.AddControllers();
-        builder.Services.AddEndpointsApiExplorer(); // Add this line
+        builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddOpenApiDocument(configuration =>
         {
@@ -95,10 +96,7 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseRouting();
-;
-
-        //app.MapIdentityApi<IdentityUser>().AllowAnonymous();
-
+        app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
         app.UseOpenApi();
         app.UseSwaggerUi();
@@ -112,7 +110,6 @@ public class Program
         });
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
        
             app.MapControllers();
@@ -128,6 +125,11 @@ public class Program
             {
                  roleManager.CreateAsync(new IdentityRole(Role.Reader)).GetAwaiter().GetResult();
             }            File.WriteAllText("current_db.sql", context.Database.GenerateCreateScript());
+            context.Patients.Add(new Patient()
+            {
+                Gender = true, Birthdate = DateOnly.MinValue, Address = "Somewhere", Name = "Bob"
+            });
+            context.SaveChanges();
         }
     
         app.Run();

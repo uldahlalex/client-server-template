@@ -19,8 +19,7 @@ public class ApiTestBase : WebApplicationFactory<Program>
             PgCtxSetup._postgres.GetConnectionString());
         ApplicationServices = base.Services.CreateScope().ServiceProvider;
         TestHttpClient = CreateClient();
-        //If you have enabled authentication, you can attach a default JWT for the http client
-        TestHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(UserJwt);
+        TestHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", UserJwt);
         Seed().GetAwaiter().GetResult();
     }
 
@@ -63,7 +62,7 @@ public class ApiTestBase : WebApplicationFactory<Program>
     public HttpClient TestHttpClient { get; set; }
 
     public string UserJwt { get; set; } =
-        "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.0Bk7pFvb2zgnomw3gUNpoCNq9fEhAD-qrzD38eOjo4PN0PZwiZbcssGRuslR0KG9umsY1lB0MFCH54eRSficnQ";
+        "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAiLCJleHAiOjE3MzI2OTUyMzUsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJhbGV4QHVsZGFobC5kayIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMmJiMjFlOWEtZmMwYi00Y2RlLTgyZjctZGM2YWJmYTYxNzAyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiUmVhZGVyIiwiaWF0IjoxNzMyMDkwNDM1LCJuYmYiOjE3MzIwOTA0MzV9.G5wYJZHXwF4-vSOoKG0Pa3MB6fxnaaL5RjtQ-cYhH2K4Mzn_SVrB0bN8Aa1LHbiV1DYxyezbOozeC82C7n5a5w";
 
     public IServiceProvider ApplicationServices { get; set; }
 

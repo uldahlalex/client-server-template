@@ -4,7 +4,7 @@ namespace Service.TransferModels.Responses;
 
 public class DiagnosisResponseDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     public DateTime? DiagnosisDate { get; set; }
 

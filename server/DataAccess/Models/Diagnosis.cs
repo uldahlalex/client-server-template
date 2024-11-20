@@ -2,15 +2,15 @@
 
 public class Diagnosis
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public int PatientId { get; set; }
+    public Guid PatientId { get; set; }
 
-    public int DiseaseId { get; set; }
+    public Guid DiseaseId { get; set; }
 
     public DateTime? DiagnosisDate { get; set; }
 
-    public int DoctorId { get; set; }
+    public Guid DoctorId { get; set; }
 
     public virtual Disease Disease { get; set; } = null!;
 

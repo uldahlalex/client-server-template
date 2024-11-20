@@ -2,11 +2,11 @@
 
 public class PatientTreatment
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public int PatientId { get; set; }
+    public Guid PatientId { get; set; }
 
-    public int TreatmentId { get; set; }
+    public Guid TreatmentId { get; set; }
 
     public DateTime? StartDate { get; set; }
 

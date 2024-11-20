@@ -4,9 +4,9 @@ namespace Service.TransferModels.Requests;
 
 public class CreateDiagnosisDto
 {
-    public int DoctorId { get; set; }
-    public int PatientId { get; set; }
-    public int DiseaseId { get; set; }
+    public Guid DoctorId { get; set; }
+    public Guid PatientId { get; set; }
+    public Guid DiseaseId { get; set; }
 
     public Diagnosis ToDiagnosis()
     {

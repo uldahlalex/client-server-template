@@ -8,7 +8,7 @@ public class PatientResponseDto
 
     public bool Gender { get; set; }
 
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     public ICollection<DiagnosisResponseDto> DiagnosisResponseDtos { get; set; }
 
