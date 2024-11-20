@@ -1,6 +1,5 @@
 using API.Extensions;
 using DataAccess;
-using DataAccess.Entities;
 using DataAccess.Models;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -41,10 +40,10 @@ public class Program
         #region Security
 
         builder
-            .Services.AddIdentityApiEndpoints<User>()
+            .Services.AddIdentityApiEndpoints<IdentityUser>()
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<HospitalContext>();
-        builder.Services.AddSingleton<IPasswordHasher<User>, Argon2idPasswordHasher<User>>();
+        builder.Services.AddSingleton<IPasswordHasher<IdentityUser>, Argon2idPasswordHasher<IdentityUser>>();
         builder
             .Services.AddAuthentication(config =>
             {
@@ -124,7 +123,8 @@ public class Program
             if (!roleManager.RoleExistsAsync(Role.Reader).GetAwaiter().GetResult())
             {
                  roleManager.CreateAsync(new IdentityRole(Role.Reader)).GetAwaiter().GetResult();
-            }            File.WriteAllText("current_db.sql", context.Database.GenerateCreateScript());
+            }           
+            File.WriteAllText("current_db.sql", context.Database.GenerateCreateScript());
             context.Patients.Add(new Patient()
             {
                 Gender = true, Birthdate = DateOnly.MinValue, Address = "Somewhere", Name = "Bob"
