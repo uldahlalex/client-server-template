@@ -31,7 +31,7 @@ CREATE TABLE diseases (
     id uuid NOT NULL,
     name text NOT NULL,
     severity text NOT NULL,
-    CONSTRAINT diseases_pkey PRIMARY KEY (id)
+    CONSTRAINT "PK_diseases" PRIMARY KEY (id)
 );
 
 
@@ -40,7 +40,7 @@ CREATE TABLE doctors (
     name text NOT NULL,
     specialty text NOT NULL,
     years_experience integer,
-    CONSTRAINT doctors_pkey PRIMARY KEY (id)
+    CONSTRAINT "PK_doctors" PRIMARY KEY (id)
 );
 
 
@@ -50,7 +50,7 @@ CREATE TABLE patients (
     birthdate date NOT NULL,
     gender boolean NOT NULL,
     address text,
-    CONSTRAINT patients_pkey PRIMARY KEY (id)
+    CONSTRAINT "PK_patients" PRIMARY KEY (id)
 );
 
 
@@ -58,7 +58,7 @@ CREATE TABLE treatments (
     id uuid NOT NULL,
     name text NOT NULL,
     cost double precision NOT NULL,
-    CONSTRAINT treatments_pkey PRIMARY KEY (id)
+    CONSTRAINT "PK_treatments" PRIMARY KEY (id)
 );
 
 
@@ -115,12 +115,12 @@ CREATE TABLE diagnoses (
     id uuid NOT NULL,
     patient_id uuid NOT NULL,
     disease_id uuid NOT NULL,
-    diagnosis_date timestamp with time zone DEFAULT (CURRENT_TIMESTAMP),
+    diagnosis_date timestamp with time zone,
     doctor_id uuid NOT NULL,
-    CONSTRAINT diagnoses_pkey PRIMARY KEY (id),
-    CONSTRAINT diagnoses_disease_id_fkey FOREIGN KEY (disease_id) REFERENCES diseases (id) ON DELETE CASCADE,
-    CONSTRAINT diagnoses_doctor_id_fkey FOREIGN KEY (doctor_id) REFERENCES doctors (id) ON DELETE CASCADE,
-    CONSTRAINT diagnoses_patient_id_fkey FOREIGN KEY (patient_id) REFERENCES patients (id) ON DELETE CASCADE
+    CONSTRAINT "PK_diagnoses" PRIMARY KEY (id),
+    CONSTRAINT "FK_diagnoses_diseases_disease_id" FOREIGN KEY (disease_id) REFERENCES diseases (id) ON DELETE CASCADE,
+    CONSTRAINT "FK_diagnoses_doctors_doctor_id" FOREIGN KEY (doctor_id) REFERENCES doctors (id) ON DELETE CASCADE,
+    CONSTRAINT "FK_diagnoses_patients_patient_id" FOREIGN KEY (patient_id) REFERENCES patients (id) ON DELETE CASCADE
 );
 
 
@@ -128,11 +128,11 @@ CREATE TABLE patient_treatments (
     id uuid NOT NULL,
     patient_id uuid NOT NULL,
     treatment_id uuid NOT NULL,
-    start_date timestamp with time zone DEFAULT (CURRENT_TIMESTAMP),
+    start_date timestamp with time zone,
     end_date timestamp with time zone,
-    CONSTRAINT patient_treatments_pkey PRIMARY KEY (id),
-    CONSTRAINT patient_treatments_patient_id_fkey FOREIGN KEY (patient_id) REFERENCES patients (id) ON DELETE CASCADE,
-    CONSTRAINT patient_treatments_treatment_id_fkey FOREIGN KEY (treatment_id) REFERENCES treatments (id) ON DELETE CASCADE
+    CONSTRAINT "PK_patient_treatments" PRIMARY KEY (id),
+    CONSTRAINT "FK_patient_treatments_patients_patient_id" FOREIGN KEY (patient_id) REFERENCES patients (id) ON DELETE CASCADE,
+    CONSTRAINT "FK_patient_treatments_treatments_treatment_id" FOREIGN KEY (treatment_id) REFERENCES treatments (id) ON DELETE CASCADE
 );
 
 

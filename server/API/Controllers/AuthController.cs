@@ -1,6 +1,5 @@
 using System.Security.Authentication;
 using System.Text.Json;
-using DataAccess.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -20,7 +19,7 @@ public class AuthController : ControllerBase
     [Route("login")]
     [AllowAnonymous]
     public async Task<LoginResponse> Login(
-        [FromServices] UserManager<User> userManager,
+        [FromServices] UserManager<IdentityUser> userManager,
         [FromServices] IValidator<LoginRequest> validator,
         [FromServices] ITokenClaimsService tokenClaimsService,
         [FromBody] LoginRequest data
@@ -41,14 +40,14 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     public async Task<RegisterResponse> Register(
         IOptions<AppOptions> options,
-        [FromServices] UserManager<User> userManager,
+        [FromServices] UserManager<IdentityUser> userManager,
         [FromServices] IValidator<RegisterRequest> validator,
         [FromBody] RegisterRequest data
     )
     {
         await validator.ValidateAndThrowAsync(data);
 
-        var user = new User { UserName = data.Email, Email = data.Email };
+        var user = new IdentityUser() { UserName = data.Email, Email = data.Email };
         var result = await userManager.CreateAsync(user, data.Password);
         if (!result.Succeeded)
             throw new Exception(
@@ -60,7 +59,7 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("logout")]
-    public async Task<IResult> Logout([FromServices] SignInManager<User> signInManager)
+    public async Task<IResult> Logout([FromServices] SignInManager<IdentityUser> signInManager)
     {
         await signInManager.SignOutAsync();
         return Results.Ok();
@@ -68,7 +67,7 @@ public class AuthController : ControllerBase
 
     [HttpGet]
     [Route("userinfo")]
-    public async Task<AuthUserInfo> UserInfo([FromServices] UserManager<User> userManager)
+    public async Task<AuthUserInfo> UserInfo([FromServices] UserManager<IdentityUser> userManager)
     {
         var username = HttpContext.User.Identity?.Name ?? throw new AuthenticationException();
         var user = await userManager.FindByNameAsync(username) ?? throw new AuthenticationException();

@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using DataAccess.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -12,9 +11,9 @@ public class JwtTokenClaimService : ITokenClaimsService
     public const string SignatureAlgorithm = SecurityAlgorithms.HmacSha512;
 
     private readonly AppOptions _options;
-    private readonly UserManager<User> _userManager;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public JwtTokenClaimService(IOptions<AppOptions> options, UserManager<User> userManager)
+    public JwtTokenClaimService(IOptions<AppOptions> options, UserManager<IdentityUser> userManager)
     {
         _options = options.Value;
         _userManager = userManager;
